@@ -34,13 +34,17 @@
       "description": "User's seniority"
     },
     {
-      "key": "completedTransactions",
-      "full_name": "Transacciones completadas",
+      "key": "rating",
+      "full_name": "Rating",
       "type": "numeric",
       "is_objective": true,
       "goal": "max",
-      "format": "number:0",
-      "description": "Completed Transactions"
+      "format": "number:1.0",
+      "range": {
+        "low": 0,
+        "high": 1
+      },
+      "description": "Average user's rating from MercadoLibre"
     }
   ]
 }

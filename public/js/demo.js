@@ -91,6 +91,7 @@
 
   /**********SERVICE INTERACTION**********/
   function dilemma(problem) {
+    console.log(problem);
     // automatically fetch the token right away
     // later, call getToken.then(function(token) {...}); to use it
     // it's valid for up to an hour
@@ -106,6 +107,7 @@
      * @returns {ProblemData}
      */
     function minimizeProblem(problem) {
+      console.log(problem);
       var objs = problem.columns
           .filter(function(col){
             return col.is_objective;
@@ -217,7 +219,7 @@
         var txt = err.status + ' ' + err.statusText + ' ' + err.responseText;
         console.error(txt, err);
 
-        var errMsg = "<div>Oops something went wrong. Please try again later.</div>" + "<div>" + txt + "</div>";
+        var errMsg = "<div>Oops, algo malio sal</div>" + "<div>" + txt + "</div>";
         $('._demo--error').append(errMsg).show();
       });
   }
@@ -239,6 +241,7 @@
           var op = $(tile).data('op');
           return evalOp(op);
         });
+      console.log(evals);
         $(tile).toggleClass('isIn', isIn);
       });
     }
@@ -388,7 +391,7 @@
           + '<h6 class="candidates--item-title">{{opName}}</h6>'
           + '<p class="candidates--item-des base--p">{{opDesc}}</p>'
           + '<div class="candidates--item-para-container">{{paraValue}}</div>'
-          + '<div id="compare-{{key}}" class="candidates--item-btn">add to comparison</div>'
+          + '<div id="compare-{{key}}" class="candidates--item-btn">Agregar comparacion</div>'
         + '</div>',
         {key: op.key, opName: op.name, paraValue:paraValue, opDesc: op.description}));
 
@@ -414,8 +417,8 @@
                         '</div>'+
                         '<div class="comparison--candidate-paras"></div>'+
                         '<div class="comparison--choice">'+
-                          '<span class="comparison--close icon icon-close" title="Remove from comparison"></span>'+
-                          '<span class="comparison--confirm icon icon-confirm" title="Make this your final option"></span>'+
+                          '<span class="comparison--close icon icon-close" title="Elimina comparacion"></span>'+
+                          '<span class="comparison--confirm icon icon-confirm" title="Has de esta tu opcion final"></span>'+
                         '</div>'+
                       '</div>';
     var opParaTemplate = '<div class="comparison--candidate-para">'+
@@ -554,6 +557,45 @@
   function columnValue(col, val){
     return format(val, col.format);
   }
+
+  // AUTH
+  function auth(){
+    $.ajax('/auth/mercadolibre', {
+      method: 'GET'
+    }).then(function(response){
+      window.location = response;
+    })
+  }
+  function check(){
+    console.log('validating');
+    $.ajax('/valid', {
+      method: 'post'
+    }).then(function(response){
+      console.log(response);
+      // var result = dilemma(response);
+      // console.log(result);
+      var good = 'Felicidades, segun tus datos puedes optar por el Credito MICRO de BCI';
+      var bad = 'Lo sentimos, segun tus datos no estas apto para ninguno de nuestros creditos registrado, sin embargo te notificaremos a la brevedad cuando uno de nustros creditos nuevos se adapten a sus necesidades';
+      $('._demo--output').append(good).show();
+    })
+  }
+  function save(){
+    var subject = theProblem.subject
+    var cols = theProblem.columns.filter(function(c){return c.is_objective;});
+    var problem = {
+      subject: subject,
+      columns: cols
+    }
+    var body = JSON.stringify(problem);
+    console.log(body);
+    $.post('/saveProfile', {
+      json:true,
+      headers: {
+        "content-type": "application/json",
+      },
+      body: body
+    })
+  }
   //underscore template matching conig
   _.templateSettings = {
       interpolate: /\{\{(.+?)\}\}/g
@@ -573,6 +615,9 @@
     });
 
     $('.panel--button').click(analyze);
+    $('.auth').click(auth);
+    $('.check').click(check);
+    $('.save').click(save);
   });
 
 }())

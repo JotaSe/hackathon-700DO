@@ -39,6 +39,7 @@ tradeoffAnalyticsConfig.setupToken(app, {//for dev purposes. in bluemix it is ta
 });
 
 app.get('/', function(req, res) {
+   console.log(req._csrfToken);
   res.render('bank', {
     ct: req._csrfToken,
     GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID
@@ -73,6 +74,7 @@ app.get('/auth/mercadolibre', function (req,res) {
   res.json(response);
 });
 app.get('/check', function (req,res) {
+  console.log(req._csrfToken);
   res.render('check', {
     ct: req._csrfToken,
     GOOGLE_ANALYTICS_ID: process.env.GOOGLE_ANALYTICS_ID
